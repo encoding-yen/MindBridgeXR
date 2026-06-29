@@ -1,0 +1,15 @@
+latest_imu_data = {
+    "pitch": 0,
+    "roll": 0,
+    "yaw": 0,
+    "ax": 0,
+    "ay": 0,
+    "az": 0,
+    "gx": 0,
+    "gy": 0,
+    "gz": 0,
+    "mx": 0,
+    "my": 0,
+    "mz": 0,
+    "connected": False,
+}
