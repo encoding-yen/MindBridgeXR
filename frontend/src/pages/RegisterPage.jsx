@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { User, Mail, Lock, Calendar } from "lucide-react";
 import stingrayBarImage from "../assets/images/stingray-bar.png";
+import logoLight from "../assets/images/Logo-Light.svg";
 import { registerUser } from "../services/authService.js";
 
 export default function RegisterPage() {
@@ -53,7 +54,7 @@ export default function RegisterPage() {
     <section className="auth-page">
       <div className="auth-brand-panel">
         <div className="auth-logo">
-          <span>◆</span> STINGRAY
+          <img src={logoLight} alt="Stingray" className="auth-logo-mark" />
         </div>
 
         <img src={stingrayBarImage} alt="STINGRAY Bar" className="auth-bar-image" />

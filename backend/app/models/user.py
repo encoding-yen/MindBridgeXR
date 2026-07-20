@@ -16,4 +16,5 @@ class User(Base):
     height_cm = Column(Float, nullable=True)
     weight_kg = Column(Float, nullable=True)
 
+    last_login = Column(DateTime(timezone=True), server_default=func.now()) 
     created_at = Column(DateTime(timezone=True), server_default=func.now())

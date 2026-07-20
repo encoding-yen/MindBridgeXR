@@ -1,24 +1,90 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   CheckCircle,
+  XCircle,
   AlertTriangle,
   Bluetooth,
+  BluetoothOff,
   Activity,
   ShieldCheck,
   Clock,
   ListChecks,
   Dumbbell,
   ArrowLeft,
+  Loader2,
 } from "lucide-react";
 
 import stingrayBarImage from "../assets/images/stingray-bar.png";
 import { startSession } from "../services/sessionService.js";
+import { getLiveImuData } from "../services/liveImuService.js";
+
+// How often to poll for a connection check
+const CHECK_INTERVAL_MS = 2000;
+// If we haven't heard from the bar in this long, treat it as disconnected
+const STALE_THRESHOLD_MS = 4000;
 
 export default function StartInstructionsPage() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
   const [isStarting, setIsStarting] = useState(false);
+
+  // "checking" | "connected" | "disconnected"
+  const [connectionStatus, setConnectionStatus] = useState("checking");
+  const [lastGoodDataAt, setLastGoodDataAt] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function checkConnection() {
+      try {
+        const data = await getLiveImuData();
+
+        // Treat a response as a real signal only if it actually contains
+        // orientation data, not just an empty/malformed payload.
+        const hasData =
+          data &&
+          data.pitch !== undefined &&
+          data.roll !== undefined &&
+          data.yaw !== undefined;
+
+        if (cancelled) return;
+
+        if (hasData) {
+          setLastGoodDataAt(Date.now());
+          setConnectionStatus("connected");
+        } else {
+          setConnectionStatus("disconnected");
+        }
+      } catch (error) {
+        if (cancelled) return;
+        setConnectionStatus("disconnected");
+      }
+    }
+
+    checkConnection();
+    const interval = setInterval(checkConnection, CHECK_INTERVAL_MS);
+
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, []);
+
+  // Independently guard against a stale "connected" state if the polling
+  // interval stalls for any reason (e.g. tab backgrounded then resumed).
+  useEffect(() => {
+    const staleCheck = setInterval(() => {
+      if (lastGoodDataAt && Date.now() - lastGoodDataAt > STALE_THRESHOLD_MS) {
+        setConnectionStatus("disconnected");
+      }
+    }, 1000);
+
+    return () => clearInterval(staleCheck);
+  }, [lastGoodDataAt]);
+
+  const isConnected = connectionStatus === "connected";
+  const isChecking = connectionStatus === "checking";
 
   async function handleStartAssessment() {
     try {
@@ -65,10 +131,12 @@ export default function StartInstructionsPage() {
             className="device-bar-image"
           />
 
-          <div className="connection-pill">
+          <div className={`connection-pill ${connectionStatus}`}>
             <span></span>
-            STINGRAY Connected
-            <Bluetooth size={16} />
+            {isChecking && "Checking connection..."}
+            {isConnected && "STINGRAY Connected"}
+            {!isChecking && !isConnected && "STINGRAY Disconnected"}
+            {isConnected ? <Bluetooth size={16} /> : <BluetoothOff size={16} />}
           </div>
         </div>
 
@@ -117,14 +185,30 @@ export default function StartInstructionsPage() {
           <div className="system-check-card">
             <p className="section-label">System Check</p>
 
-            <CheckRow label="Bar Connection" />
-            <CheckRow label="Sensor Status" />
-            <CheckRow label="Calibration" />
-            <CheckRow label="System Status" />
+            <CheckRow
+              label="Bar Connection"
+              status={isChecking ? "checking" : isConnected ? "ready" : "failed"}
+            />
+            <CheckRow
+              label="Sensor Status"
+              status={isChecking ? "checking" : isConnected ? "ready" : "failed"}
+            />
+            <CheckRow
+              label="Calibration"
+              status={isChecking ? "checking" : isConnected ? "ready" : "failed"}
+            />
+            <CheckRow
+              label="System Status"
+              status={isChecking ? "checking" : isConnected ? "ready" : "failed"}
+            />
 
-            <div className="ready-message">
-              <CheckCircle size={18} />
-              All systems ready. You're good to go.
+            <div className={`ready-message ${isConnected ? "ok" : "not-ok"}`}>
+              {isConnected ? <CheckCircle size={18} /> : <AlertTriangle size={18} />}
+              {isChecking && "Checking system status..."}
+              {isConnected && "All systems ready. You're good to go."}
+              {!isChecking &&
+                !isConnected &&
+                "STINGRAY bar not detected. Check the connection and try again."}
             </div>
           </div>
         </div>
@@ -147,7 +231,8 @@ export default function StartInstructionsPage() {
         <button
           className="primary-action"
           onClick={handleStartAssessment}
-          disabled={isStarting}
+          disabled={isStarting || !isConnected}
+          title={!isConnected ? "Waiting for STINGRAY bar connection..." : undefined}
         >
           {isStarting ? "Starting..." : "Start Assessment →"}
         </button>
@@ -180,14 +265,20 @@ function SummaryRow({ icon, label, value }) {
   );
 }
 
-function CheckRow({ label }) {
+function CheckRow({ label, status }) {
   return (
     <div className="check-row">
       <span>
-        <CheckCircle size={18} />
+        {status === "checking" && <Loader2 size={18} className="spin" />}
+        {status === "ready" && <CheckCircle size={18} />}
+        {status === "failed" && <XCircle size={18} />}
         {label}
       </span>
-      <strong>Ready</strong>
+      <strong>
+        {status === "checking" && "Checking..."}
+        {status === "ready" && "Ready"}
+        {status === "failed" && "Not Ready"}
+      </strong>
     </div>
   );
 }

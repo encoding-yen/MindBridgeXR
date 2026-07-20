@@ -79,7 +79,24 @@ export default function ProgressChart() {
                 stroke="#94a3b8"
               />
 
-              <Tooltip />
+              <Tooltip
+                contentStyle={{
+                  background: "#111827",
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  borderRadius: 8,
+                  padding: "8px 12px",
+                }}
+                labelStyle={{
+                  color: "#94a3b8",
+                  fontWeight: 600,
+                  marginBottom: 4,
+                }}
+                itemStyle={{
+                  color: "#2563eb",
+                  fontWeight: 700,
+                }}
+                formatter={(value) => [`${value} / 21`, "Score"]}
+              />
 
               <Line
                 type="monotone"
@@ -105,7 +122,7 @@ export default function ProgressChart() {
         )}
       </p>
 
-      <button className="secondary-button">
+      <button className="secondary-button" onClick={() => navigate("/progress")}>
         View Full Progress
       </button>
     </div>

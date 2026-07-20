@@ -1,7 +1,9 @@
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
+
 import Sidebar from "./components/layout/Sidebar.jsx";
 import TopBar from "./components/layout/TopBar.jsx";
 
+import LandingPage from "./pages/LandingPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import DashboardHome from "./pages/DashboardHome.jsx";
@@ -12,11 +14,30 @@ import SessionReportPage from "./pages/SessionReportPage.jsx";
 import ProgressHistoryPage from "./pages/ProgressHistoryPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import HelpSupportPage from "./pages/HelpSupportPage";
+import SettingsPage from "./pages/SettingsPage.jsx";
+
+/* Main Application */
 
 export default function App() {
   const location = useLocation();
+
+  /* Public Marketing Page */
+
+  const isLandingPage = location.pathname === "/";
+
+  if (isLandingPage) {
+    return (
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+      </Routes>
+    );
+  }
+
+  /* Authentication Pages */
+
   const isAuthPage =
-    location.pathname === "/login" || location.pathname === "/register";
+    location.pathname === "/login" ||
+    location.pathname === "/register";
 
   if (isAuthPage) {
     return (
@@ -27,6 +48,8 @@ export default function App() {
     );
   }
 
+  /* Main Application Layout */
+
   return (
     <div className="app-shell">
       <Sidebar />
@@ -36,15 +59,26 @@ export default function App() {
 
         <main className="main-content">
           <Routes>
-            <Route path="/" element={<Navigate to="/login" replace />} />
+            {/* Dashboard */}
             <Route path="/dashboard" element={<DashboardHome />} />
+
+            {/* Exercise Pages */}
             <Route path="/start" element={<StartInstructionsPage />} />
             <Route path="/live-session" element={<LiveExercisePage />} />
+
+            {/* Reports */}
             <Route path="/session-history" element={<SessionHistoryPage />} />
             <Route path="/session-report" element={<SessionReportPage />} />
             <Route path="/progress" element={<ProgressHistoryPage />} />
+
+            {/* User */}
             <Route path="/profile" element={<ProfilePage />} />
+
+            {/* Support */}
             <Route path="/help-support" element={<HelpSupportPage />} />
+
+            {/* Settings */}
+            <Route path="/settings" element={<SettingsPage />} />
           </Routes>
         </main>
       </div>

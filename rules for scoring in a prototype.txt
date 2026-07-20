@@ -1,4 +1,4 @@
-rules for scoring in a prototype:
+rules for scoring in this prototype:
 
 For each exercise:
 collect pitch/roll/yaw values while user performs it

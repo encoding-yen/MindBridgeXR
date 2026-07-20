@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from app.models.user import User
@@ -51,4 +52,13 @@ def login_user(db: Session, data):
     if not verify_password(data.password, user.password_hash):
         return None
 
+    # Grab the previous login time before overwriting it, so "Last Login"
+    # on the dashboard reflects the last time they logged in, not this one.
+    previous_login = user.last_login
+
+    user.last_login = datetime.now(timezone.utc)
+    db.commit()
+    db.refresh(user)
+
+    user.last_login = previous_login
     return user

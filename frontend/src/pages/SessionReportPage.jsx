@@ -81,6 +81,8 @@ export default function SessionReportPage() {
   const avgRange = average(exerciseResults.map((e) => e.range_score));
   const avgSpeed = average(exerciseResults.map((e) => e.speed_score));
 
+  const timeCompletion = new Date(session.ended_at) / 60 - new Date(session.started_at) / 60;
+
   return (
     <section className="report-page">
       <header className="report-header">
@@ -196,7 +198,7 @@ export default function SessionReportPage() {
         <div className="timeline-panel">
           <h2>Session Timeline</h2>
           <TimelineRow label="Session Started" value={formatTime(session.started_at)} />
-          <TimelineRow label="Exercises Completed" value={`${formatTime(session.started_at)} – ${formatTime(session.ended_at)}`} />
+          <TimelineRow label="Exercises Completed" value={formatDuration(timeCompletion)} />
           <TimelineRow label="Session Completed" value={formatTime(session.ended_at)} />
         </div>
       </div>

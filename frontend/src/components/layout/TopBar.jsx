@@ -1,26 +1,42 @@
-import { Bell, ChevronDown } from "lucide-react";
+import { Bell, Settings, User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+/* Top Bar */
 
 export default function TopBar() {
+  const navigate = useNavigate();
+
   return (
     <header className="top-bar">
-      <div></div>
+      <div />
 
       <div className="top-bar-actions">
-        <button className="notification-button">
+        {/* Notifications */}
+        <button
+          className="notification-button"
+          aria-label="Notifications"
+        >
           <Bell size={22} />
           <span>3</span>
         </button>
 
-        <div className="top-user">
-          <div className="top-user-avatar">M</div>
+        {/* Settings */}
+        <button
+          className="settings-button"
+          aria-label="Settings"
+          onClick={() => navigate("/settings")}
+        >
+          <Settings size={22} />
+        </button>
 
-          <div className="top-user-info">
-            <strong>Marwa</strong>
-            <span>Member</span>
-          </div>
-
-          <ChevronDown size={18} />
-        </div>
+        {/* Profile */}
+        <button
+          className="profile-button"
+          aria-label="Profile"
+          onClick={() => navigate("/profile")}
+        >
+          <User size={22} />
+        </button>
       </div>
     </header>
   );

@@ -6,13 +6,24 @@ import RecentSessions from "../components/dashboard/RecentSessions.jsx";
 import RecommendationCard from "../components/dashboard/RecommendationCard.jsx";
 import { getUserSessionStats } from "../services/sessionService.js";
 
+function formatLastLogin(lastLogin) {
+  if (!lastLogin) return "First login";
+
+  const date = new Date(lastLogin);
+
+  return date.toLocaleString(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+}
+
 export default function DashboardHome() {
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
   const [stats, setStats] = useState({
     sessions_completed: 0,
-    latest_score: 0,
+    latest_ : 0,
     best_score: 0,
     current_risk_level: "No Data",
     improvement: 0,
@@ -54,7 +65,8 @@ export default function DashboardHome() {
         <div>
           <h1>Hello, {user?.full_name || "User"}</h1>
           <p>
-            STINGRAY ID: {user?.stingray_id || "N/A"} | Last Login: Today
+            STINGRAY ID: {user?.stingray_id || "N/A"} | Last Login:{" "}
+            {formatLastLogin(user?.last_login)}
           </p>
         </div>
       </header>

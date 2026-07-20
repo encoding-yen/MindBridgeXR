@@ -17,6 +17,22 @@ import { endSession } from "../services/sessionService.js";
 import { exercises } from "../data/exercises.js";
 import { calculateMovementMetrics } from "../utils/movementMetrics.js";
 
+// Keeps an angle within [-180, 180] as a defensive layer in case upstream
+// data (firmware / bridge) ever sends an unwrapped or stale value.
+function wrapAngle(angle) {
+  let a = angle;
+  while (a > 180.0) a -= 360.0;
+  while (a < -180.0) a += 360.0;
+  return a;
+}
+
+// Formats a duration in seconds as mm:ss
+function formatElapsed(totalSeconds) {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
 export default function LiveExercisePage() {
   const navigate = useNavigate();
 
@@ -24,6 +40,7 @@ export default function LiveExercisePage() {
   const [isEndingSession, setIsEndingSession] = useState(false);
   const [recentSamples, setRecentSamples] = useState([]);
   const [exerciseResults, setExerciseResults] = useState([]);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
   const [imuData, setImuData] = useState({
     pitch: 0,
@@ -61,15 +78,38 @@ export default function LiveExercisePage() {
     }
   }, [navigate]);
 
+  // Session timer: bases elapsed time on the session's recorded start time
+  // when available, so the clock survives refreshes/remounts. Falls back to
+  // "now" if the session has no startedAt field yet.
+  useEffect(() => {
+    const activeSession = getActiveSession();
+    const startedAt = activeSession?.startedAt
+      ? new Date(activeSession.startedAt).getTime()
+      : Date.now();
+
+    function tick() {
+      const secondsElapsed = Math.max(
+        0,
+        Math.floor((Date.now() - startedAt) / 1000)
+      );
+      setElapsedSeconds(secondsElapsed);
+    }
+
+    tick();
+    const interval = setInterval(tick, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
         const data = await getLiveImuData();
 
         const newSample = {
-          pitch: Number(data.pitch) || 0,
-          roll: Number(data.roll) || 0,
-          yaw: Number(data.yaw) || 0,
+          pitch: wrapAngle(Number(data.pitch) || 0),
+          roll: wrapAngle(Number(data.roll) || 0),
+          yaw: ((Number(data.yaw) || 0) % 360 + 360) % 360,
         };
 
         setImuData(newSample);
@@ -146,7 +186,7 @@ export default function LiveExercisePage() {
       <header className="live-session-header">
         <div className="session-time">
           <span>Session Time</span>
-          <strong>04:32</strong>
+          <strong>{formatElapsed(elapsedSeconds)}</strong>
         </div>
 
         <div className="exercise-title-block">

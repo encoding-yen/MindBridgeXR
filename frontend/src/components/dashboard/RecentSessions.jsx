@@ -33,6 +33,13 @@ export default function RecentSessions() {
     }
   }
 
+  // Added a function to navigate to the session report page when a session is clicked
+  // Direct link to the report page for the selected session, accessible on the dashboard page.
+   function goToReport(session) {
+    localStorage.setItem("selectedReportSession", JSON.stringify(session));
+    navigate("/session-report");
+  }
+
   return (
     <div className="dashboard-panel">
       <div className="panel-header">
@@ -48,9 +55,19 @@ export default function RecentSessions() {
           <p>No completed sessions found.</p>
         ) : (
           sessions.map((session) => (
+            // Added onClick and onKeyDown handlers to navigate to the session report page
+            // when a session is clicked or activated via keyboard.
             <div
               className="recent-session-row"
               key={session.id}
+              onClick={() => goToReport(session)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  goToReport(session);
+                }
+              }}
             >
               <span>
                 {new Date(session.started_at).toLocaleDateString()}

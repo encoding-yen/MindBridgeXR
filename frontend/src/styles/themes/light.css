@@ -1,0 +1,75 @@
+/* Light Theme — Stingray XR Brand Palette (swapped for light backgrounds) */
+
+[data-theme="light"] {
+  /* Backgrounds (White / Steel Silver family) */
+  --color-background: #f4f5f6;
+  --color-surface: #ffffff;
+  --color-surface-secondary: #ecedef;
+  --color-surface-hover: #e2e4e6;
+
+  /* Sidebar & Topbar */
+  --color-sidebar: #ffffff;
+  --color-topbar: rgba(255, 255, 255, 0.85);
+
+  /* Live 3D Viewer (Steel Silver — light-mode counterpart of the dark viewer) */
+  --color-viewer-background: #b8bdc2;
+
+  /* Borders */
+  --color-border: #d6d8da;
+  --color-divider: #e5e5ea;
+
+  /* Text (Carbon Black / Graphite Grey / Slate Grey) */
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #333333;
+  --color-text-muted: #6a6d70;
+
+  /* Accent (Deep Ocean Blue base, Deep Teal hover/highlight — both readable on white) */
+  --color-primary: #1b4f72;
+  --color-primary-hover: #0d6f7e;
+
+  /* Status (System Feedback Colours) */
+  --color-success: #4cd964;
+  --color-warning: #ff9f0a;
+  --color-danger: #e34b4b;
+  --color-info: #0d6f7e;
+
+  /* Cards */
+  --card-background: #ffffff;
+  --card-border: #d6d8da;
+
+  /* Inputs */
+  --input-background: #ffffff;
+  --input-border: #d6d8da;
+  --input-focus: var(--color-primary);
+
+  /* Buttons */
+  --button-primary: var(--color-primary);
+  --button-primary-hover: var(--color-primary-hover);
+  --button-primary-hover-text: #d8dde0;
+
+  --button-secondary: #ecedef;
+  --button-secondary-hover: #e2e4e6;
+
+  /* Sidebar */
+  --sidebar-link: #333333;
+  --sidebar-link-hover: rgba(27, 79, 114, 0.08);
+  --sidebar-link-active: rgba(27, 79, 114, 0.16);
+
+  /* Shadows */
+  --shadow-small: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-large: 0 20px 48px rgba(0, 0, 0, 0.12);
+}
+
+/* High Contrast */
+
+[data-theme="light"][data-high-contrast] {
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-border: #000000;
+
+  --color-text-primary: #000000;
+  --color-text-secondary: #222222;
+
+  --sidebar-link-active: #1b4f72;
+}

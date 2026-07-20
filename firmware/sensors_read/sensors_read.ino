@@ -20,15 +20,30 @@ PubSubClient client(espClient);
 
 Adafruit_QMC5883P qmc;
 
+// Magnetometer hard-iron offsets (X/Y/Z). Re-run calibration if you move to a
+// new location or change nearby ferrous/magnetic components.
 float offsetX = -1117.5;
 float offsetY = -675.0;
+float offsetZ = 0.0; // TODO: measure this properly (see calibration note below)
 float declination = 2.63;
+
+// Gyro zero-rate bias, computed at startup while the board is held still
+float gyroBiasX = 0;
+float gyroBiasY = 0;
 
 float pitch = 0;
 float roll = 0;
-float alpha = 0.96;
+float alpha = 0.92; // lowered from 0.96 so the filter recovers faster from any transient error
 
 unsigned long lastTime = 0;
+
+// Keeps an angle within [-180, 180] so drift/transients can't accumulate
+// into physically meaningless values like -524 degrees.
+float wrapAngle(float angle) {
+  while (angle > 180.0) angle -= 360.0;
+  while (angle < -180.0) angle += 360.0;
+  return angle;
+}
 
 void setupWiFi() {
   Serial.print("Connecting to WiFi: ");
@@ -62,11 +77,80 @@ void reconnectMQTT() {
       delay(5000);
     }
   }
+
+  // The loop above can block for many seconds (or longer). Reset lastTime so
+  // the next dt calculation doesn't see the stall as elapsed rotation time.
+  lastTime = millis();
+}
+
+// Reads raw accel+gyro from the MPU6050. Returns true only if a full 14-byte
+// frame was received; on failure the out-params are left untouched.
+bool readMPU6050(int16_t &axRaw, int16_t &ayRaw, int16_t &azRaw,
+                  int16_t &gxRaw, int16_t &gyRaw, int16_t &gzRaw) {
+  Wire.beginTransmission(MPU6050_ADDR);
+  Wire.write(0x3B);
+  if (Wire.endTransmission(false) != 0) {
+    return false;
+  }
+
+  uint8_t received = Wire.requestFrom(MPU6050_ADDR, 14, true);
+  if (received != 14) {
+    // Drain whatever partial data is there so it doesn't corrupt the next read
+    while (Wire.available()) Wire.read();
+    return false;
+  }
+
+  axRaw = (Wire.read() << 8) | Wire.read();
+  ayRaw = (Wire.read() << 8) | Wire.read();
+  azRaw = (Wire.read() << 8) | Wire.read();
+
+  Wire.read(); // temp high byte
+  Wire.read(); // temp low byte
+
+  gxRaw = (Wire.read() << 8) | Wire.read();
+  gyRaw = (Wire.read() << 8) | Wire.read();
+  gzRaw = (Wire.read() << 8) | Wire.read();
+
+  return true;
+}
+
+// Averages gyro readings over ~1 second while the board should be stationary.
+// Call this once in setup(), after the board has settled on a flat surface.
+void calibrateGyro() {
+  Serial.println("Calibrating gyro - keep the board still...");
+
+  const int samples = 200;
+  double sumX = 0;
+  double sumY = 0;
+  int validSamples = 0;
+
+  int16_t axRaw, ayRaw, azRaw, gxRaw, gyRaw, gzRaw;
+
+  for (int i = 0; i < samples; i++) {
+    if (readMPU6050(axRaw, ayRaw, azRaw, gxRaw, gyRaw, gzRaw)) {
+      sumX += gxRaw / 131.0;
+      sumY += gyRaw / 131.0;
+      validSamples++;
+    }
+    delay(5);
+  }
+
+  if (validSamples > 0) {
+    gyroBiasX = sumX / validSamples;
+    gyroBiasY = sumY / validSamples;
+  }
+
+  Serial.print("Gyro bias X: ");
+  Serial.print(gyroBiasX);
+  Serial.print("  Gyro bias Y: ");
+  Serial.println(gyroBiasY);
 }
 
 void setup() {
   Serial.begin(115200);
   delay(3000);
+
+  randomSeed(analogRead(0)); // seed so MQTT client IDs don't repeat every boot
 
   Wire.begin(SDA_PIN, SCL_PIN);
 
@@ -84,6 +168,8 @@ void setup() {
   qmc.setODR(QMC5883P_ODR_50HZ);
   qmc.setOSR(QMC5883P_OSR_8);
   qmc.setRange(QMC5883P_RANGE_2G);
+
+  calibrateGyro();
 
   setupWiFi();
 
@@ -105,35 +191,36 @@ void loop() {
   float dt = (currentTime - lastTime) / 1000.0;
   lastTime = currentTime;
 
-  Wire.beginTransmission(MPU6050_ADDR);
-  Wire.write(0x3B);
-  Wire.endTransmission(false);
+  // Guard against a stale/huge dt (e.g. after an MQTT reconnect stall) being
+  // integrated as real rotation.
+  if (dt > 0.2 || dt <= 0) {
+    dt = 0.02;
+  }
 
-  Wire.requestFrom(MPU6050_ADDR, 14, true);
+  int16_t axRaw, ayRaw, azRaw, gxRaw, gyRaw, gzRaw;
 
-  int16_t axRaw = (Wire.read() << 8) | Wire.read();
-  int16_t ayRaw = (Wire.read() << 8) | Wire.read();
-  int16_t azRaw = (Wire.read() << 8) | Wire.read();
-
-  Wire.read();
-  Wire.read();
-
-  int16_t gxRaw = (Wire.read() << 8) | Wire.read();
-  int16_t gyRaw = (Wire.read() << 8) | Wire.read();
-  int16_t gzRaw = (Wire.read() << 8) | Wire.read();
+  if (!readMPU6050(axRaw, ayRaw, azRaw, gxRaw, gyRaw, gzRaw)) {
+    Serial.println("MPU6050 read failed, skipping this cycle");
+    delay(60);
+    return;
+  }
 
   float ax = axRaw / 16384.0;
   float ay = ayRaw / 16384.0;
   float az = azRaw / 16384.0;
 
-  float gx = gxRaw / 131.0;
-  float gy = gyRaw / 131.0;
+  float gx = (gxRaw / 131.0) - gyroBiasX;
+  float gy = (gyRaw / 131.0) - gyroBiasY;
 
   float accelPitch = atan2(ax, sqrt((ay * ay) + (az * az))) * 180.0 / PI;
   float accelRoll = atan2(ay, az) * 180.0 / PI;
 
   pitch = alpha * (pitch + gy * dt) + (1 - alpha) * accelPitch;
   roll = alpha * (roll + gx * dt) + (1 - alpha) * accelRoll;
+
+  // Bound pitch/roll back into a physically meaningful range every cycle
+  pitch = wrapAngle(pitch);
+  roll = wrapAngle(roll);
 
   int16_t mx = 0;
   int16_t my = 0;
@@ -143,8 +230,18 @@ void loop() {
 
   float x = mx - offsetX;
   float y = my - offsetY;
+  float z = mz - offsetZ;
 
-  float yaw = atan2(y, x) * 180.0 / PI;
+  // Tilt-compensated yaw: rotate the horizontal-plane mag vector using the
+  // current pitch/roll so heading is correct even when the board isn't level.
+  float pitchRad = pitch * PI / 180.0;
+  float rollRad = roll * PI / 180.0;
+
+  float Xh = x * cos(rollRad) + z * sin(rollRad);
+  float Yh = x * sin(pitchRad) * sin(rollRad) + y * cos(pitchRad)
+             - z * sin(pitchRad) * cos(rollRad);
+
+  float yaw = atan2(Yh, Xh) * 180.0 / PI;
 
   if (yaw < 0) {
     yaw += 360.0;
@@ -156,23 +253,21 @@ void loop() {
     yaw -= 360.0;
   }
 
-  String payload = "{";
-  payload += "\"pitch\":" + String(pitch, 2) + ",";
-  payload += "\"roll\":" + String(roll, 2) + ",";
-  payload += "\"yaw\":" + String(yaw, 2) + ",";
-  payload += "\"ax\":" + String(axRaw) + ",";
-  payload += "\"ay\":" + String(ayRaw) + ",";
-  payload += "\"az\":" + String(azRaw) + ",";
-  payload += "\"gx\":" + String(gxRaw) + ",";
-  payload += "\"gy\":" + String(gyRaw) + ",";
-  payload += "\"gz\":" + String(gzRaw) + ",";
-  payload += "\"mx\":" + String(mx) + ",";
-  payload += "\"my\":" + String(my) + ",";
-  payload += "\"mz\":" + String(mz);
-  payload += "}";
+  // Fixed-size buffer instead of chained String concatenation to avoid heap
+  // fragmentation over long-running sessions.
+  char payload[220];
+  snprintf(payload, sizeof(payload),
+    "{\"pitch\":%.2f,\"roll\":%.2f,\"yaw\":%.2f,"
+    "\"ax\":%d,\"ay\":%d,\"az\":%d,"
+    "\"gx\":%d,\"gy\":%d,\"gz\":%d,"
+    "\"mx\":%d,\"my\":%d,\"mz\":%d}",
+    pitch, roll, yaw,
+    axRaw, ayRaw, azRaw,
+    gxRaw, gyRaw, gzRaw,
+    mx, my, mz);
 
   Serial.println(payload);
-  client.publish(mqtt_topic, payload.c_str());
+  client.publish(mqtt_topic, payload);
 
   delay(60);
 }
