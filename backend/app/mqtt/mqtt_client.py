@@ -1,5 +1,6 @@
 import json
 import csv
+import time
 from datetime import datetime
 
 import paho.mqtt.client as mqtt
@@ -53,21 +54,22 @@ def on_message(client, userdata, message):
         payload = message.payload.decode("utf-8")
         data = json.loads(payload)
 
-        latest_imu_data.update({
-            "pitch": float(data.get("pitch", 0)),
-            "roll": float(data.get("roll", 0)),
-            "yaw": float(data.get("yaw", 0)),
-            "ax": float(data.get("ax", 0)),
-            "ay": float(data.get("ay", 0)),
-            "az": float(data.get("az", 0)),
-            "gx": float(data.get("gx", 0)),
-            "gy": float(data.get("gy", 0)),
-            "gz": float(data.get("gz", 0)),
-            "mx": float(data.get("mx", 0)),
-            "my": float(data.get("my", 0)),
-            "mz": float(data.get("mz", 0)),
-            "connected": True,
-        })
+        latest_imu_data = {
+            "pitch": 0,
+            "roll": 0,
+            "yaw": 0,
+            "ax": 0,
+            "ay": 0,
+            "az": 0,
+            "gx": 0,
+            "gy": 0,
+            "gz": 0,
+            "mx": 0,
+            "my": 0,
+            "mz": 0,
+            "connected": False,
+            "last_seen": time.time(),
+        }
 
         append_sensor_data_to_csv(data)
 
