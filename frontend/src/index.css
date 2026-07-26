@@ -54,14 +54,14 @@ button {
 ========================================================= */
 
 .app-shell {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   background: var(--page-bg);
 }
 
 .main-content {
   flex: 1;
-  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* =========================================================
@@ -70,7 +70,7 @@ button {
 
 .sidebar {
   width: var(--sidebar-width);
-  min-height: 100vh;
+  min-height: 100dvh;
   background: var(--panel-bg);
   border-right: 3px solid var(--card-border);
   padding: 24px 20px;
@@ -257,7 +257,7 @@ button {
 
 .summary-note {
   margin: 8px 0 0;
-  color: var(--text-secondary);
+  color: var(--blue-light);
 }
 
 .status-good {
@@ -322,7 +322,7 @@ button {
 
 .main-area {
   flex: 1;
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
@@ -393,7 +393,7 @@ button {
 .dashboard-lower-grid {
   margin-top: 24px;
   display: grid;
-  grid-template-columns: 1.15fr 1fr 0.85fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
@@ -551,7 +551,7 @@ button {
 
 .instructions-grid {
   display: grid;
-  grid-template-columns: 1.3fr 0.85fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 22px;
 }
 
@@ -584,7 +584,7 @@ button {
 }
 
 .device-card > p:not(.section-label) {
-  color: var(--text-secondary);
+  color: var(--blue-light);
   line-height: 1.5;
 }
 
@@ -667,7 +667,7 @@ button {
 
 .instruction-item p {
   margin: 6px 0 0;
-  color: var(--text-secondary);
+  color: var(--blue-light);
   line-height: 1.4;
 }
 
@@ -694,7 +694,7 @@ button {
   color: var(--text-primary);
   white-space: nowrap;
   flex-shrink: 0;
-  padding: top 2px;
+  padding-top: 2px;
 }
 
 .summary-row svg {
@@ -702,7 +702,7 @@ button {
 }
 
 .summary-row strong {
-  color: var(--blue);
+  color: var(--blue-light);
   font-weight: 700;
   text-align: right;
   line-height: 1.4;
@@ -735,7 +735,7 @@ button {
 .instructions-actions {
   margin-top: 22px;
   display: grid;
-  grid-template-columns: 280px 1fr 360px;
+  grid-template-columns: repeat(2, 1fr);
   gap: 22px;
   align-items: center;
 }
@@ -769,12 +769,13 @@ button {
   border: 1px solid var(--card-border);
   border-radius: 14px;
   padding: 16px 20px;
-  color: var(--text-secondary);
+  margin-bottom: 12px;
+  color: var(--blue-light);
 }
 
 .important-note strong {
   display: block;
-  color: var(--blue);
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
@@ -982,7 +983,7 @@ button {
   height: 180px;
   padding: 22px;
   display: grid;
-  grid-template-columns: 1fr 340px;
+  grid-template-columns: 1fr 200px;
   gap: 22px;
   align-items: center;
 }
@@ -994,7 +995,7 @@ button {
 
 /* Video placeholder */
 .video-placeholder {
-  height: 140px;
+  height: 100%;
   border-radius: 14px;
   border: 1px solid var(--card-border);
   background: linear-gradient(135deg, rgba(37, 99, 235, 0.18), rgba(2, 11, 24, 0.9));
@@ -1219,7 +1220,7 @@ button {
 .report-main-grid {
   margin-top: 20px;
   display: grid;
-  grid-template-columns: 0.9fr 1.35fr 0.85fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
@@ -1403,7 +1404,7 @@ button {
 ========================================================= */
 
 .auth-page {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   grid-template-columns: 1fr 1fr;
   background: var(--page-bg);
@@ -1708,7 +1709,7 @@ button {
 
 .progress-card p {
   margin: 0;
-  color: var(--text-secondary);
+  color: var(--text-primary);
 }
 
 .progress-card h2 {
@@ -1717,7 +1718,7 @@ button {
 }
 
 .progress-card span {
-  color: var(--text-secondary);
+  color: var(--blue-light);
 }
 
 .progress-chart-card {
@@ -2024,8 +2025,8 @@ help & support page
   }
 
   .demo-card {
-    height: 250px;
-    padding: 16px;
+    grid-template-columns: 1fr;
+    height: auto;
   }
 
   .video-placeholder {
@@ -2193,7 +2194,7 @@ help & support page
 
   .instructions-actions {
     margin-top: 16px;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 14px;
   }
 
@@ -2249,11 +2250,11 @@ help & support page
   }
 
   .instructions-actions {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .live-session-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 

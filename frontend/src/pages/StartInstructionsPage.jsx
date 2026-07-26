@@ -40,13 +40,11 @@ export default function StartInstructionsPage() {
       try {
         const data = await getLiveImuData();
 
-        // Treat a response as a real signal only if it actually contains
-        // orientation data, not just an empty/malformed payload.
-        const hasData =
-          data &&
-          data.pitch !== undefined &&
-          data.roll !== undefined &&
-          data.yaw !== undefined;
+        // Treat a response as a real signal only if the backend reports an
+        // actual live connection — pitch/roll/yaw always exist as keys
+        // (they default to 0), so checking for their presence never
+        // reflects whether a bar is actually connected.
+        const hasData = data && data.connected === true;
 
         if (cancelled) return;
 
@@ -116,6 +114,14 @@ export default function StartInstructionsPage() {
         <h1>Start Instructions</h1>
         <p>Follow the steps below before beginning your assessment.</p>
       </header>
+        
+      <div className="important-note">
+        <strong>Important</strong>
+        <span>
+          This assessment is not intended to diagnose or treat any medical condition.
+          Always consult a healthcare professional for medical advice.
+        </span>
+      </div>
 
       {errorMessage && <div className="auth-error">{errorMessage}</div>}
 
@@ -219,14 +225,6 @@ export default function StartInstructionsPage() {
           <ArrowLeft size={22} />
           Back to Dashboard
         </button>
-
-        <div className="important-note">
-          <strong>Important</strong>
-          <span>
-            This assessment is not intended to diagnose or treat any medical condition.
-            Always consult a healthcare professional for medical advice.
-          </span>
-        </div>
 
         <button
           className="primary-action"

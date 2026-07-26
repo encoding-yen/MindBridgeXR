@@ -1,6 +1,5 @@
 #ifndef NEOPIXEL_DEVICE_H
 #define NEOPIXEL_DEVICE_H
-
 #include <Adafruit_NeoPixel.h>
 #include "config.h"
 
