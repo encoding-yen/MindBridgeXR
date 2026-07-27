@@ -35,18 +35,28 @@ const float REST_GYRO_THRESHOLD_DPS = 2.0;
 const float REST_ACCEL_THRESHOLD_G  = 0.05;
 const unsigned long REST_HOLD_MS    = 500;
 
+// ================== Wi-Fi / MQTT ==================
+static const char* WIFI_SSID     = "QSTP VC";
+static const char* WIFI_PASSWORD = "qstp1234";
+static const char* MQTT_BROKER = "broker.hivemq.com";
+static const int   MQTT_PORT   = 1883;
+static const char* MQTT_TOPIC  = "stingray/imu/data";
+
 // ================== Shared sensor sample ==================
-// Must match primary/config.h exactly -- this is sent as a raw byte struct
-// over ESP-NOW, so field order/types have to line up on both sides.
+// One grip's worth of readings. Used both for the primary's own local queue
+// AND as the exact struct sent over ESP-NOW from secondary -> primary, so
+// the two sides can't drift out of sync on field order/types.
 struct PoseSample {
   float pitch, roll, yaw;
   float ax, ay, az;
   float gx, gy, gz;
   float mx, my, mz;
-  float altitude;
+  float altitude; // mm, tilt-compensated + zeroed ToF reading
 };
+#define SAMPLE_QUEUE_LEN 30
 
-// How often to broadcast this grip's reading to the primary
-const uint32_t ESPNOW_SEND_PERIOD_MS = 100;
+// How old a secondary reading can be before the primary treats it as
+// "disconnected" rather than stale data.
+const unsigned long SECONDARY_TIMEOUT_MS = 2000;
 
 #endif
