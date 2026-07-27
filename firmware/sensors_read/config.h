@@ -11,7 +11,7 @@
 
 // ================== NeoPixel strip (this grip's segment only) ==================
 #define LED_PIN   23
-#define LED_COUNT 30   // half of the original 60 -- one segment per grip now
+#define LED_COUNT 30
 
 // ================== Control constants ==================
 const float P_DEADZONE  = 3.0;
