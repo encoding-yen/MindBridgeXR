@@ -9,6 +9,7 @@
     "@react-three/fiber": "latest",
     "axios": "latest",
     "lucide-react": "latest",
+    "motion": "^12.42.2",
     "react": "latest",
     "react-dom": "latest",
     "react-router-dom": "latest",

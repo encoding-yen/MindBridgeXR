@@ -1,17 +1,32 @@
 import { useNavigate } from "react-router-dom";
-import { Sun, Moon, LogIn, Info, Mail, HelpCircle, ShoppingCart } from "lucide-react";
-import { useTheme } from "../hooks/useTheme.js";
+import {
+  Zap,
+  Vibrate,
+  BatteryFull,
+  Fingerprint,
+  Volume2,
+  Lightbulb,
+  Scan,
+  RefreshCw,
+  Layers,
+  Users,
+  Building2,
+  Trophy,
+} from "lucide-react";
+import { motion } from "motion/react";
 import logoDark from "../assets/images/Logo-Dark.svg";
 import logoLight from "../assets/images/Logo-Light.svg";
 import stingrayBarImage from "../assets/images/stingray-bar.png";
 
+const NAV_LINKS = [
+  { label: "Home", id: "hero" },
+  { label: "Ecosystem", id: "ecosystem" },
+  { label: "Products", id: "bar" },
+  { label: "Why Stingray", id: "why" },
+];
+
 export default function LandingPage() {
   const navigate = useNavigate();
-  const { theme, setTheme } = useTheme();
-
-  function toggleTheme() {
-    setTheme(theme === "dark" ? "light" : "dark");
-  }
 
   function scrollToSection(id) {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -19,125 +34,232 @@ export default function LandingPage() {
 
   return (
     <div className="landing-page">
-      {/* Sidebar */}
-      <aside className="landing-sidebar">
-        <img
-          src={theme === "dark" ? logoLight : logoDark}
-          alt="Stingray"
-          className="landing-sidebar-logo"
-        />
+      {/* Sticky top nav */}
+      <header className="landing-navbar">
+        <img src={logoLight} alt="Stingray" className="landing-navbar-logo" />
 
-        <nav className="landing-sidebar-nav">
-          <button onClick={() => scrollToSection("about")}>
-            <Info size={18} />
-            <span>About Us</span>
-          </button>
-
-          <button onClick={() => scrollToSection("contact")}>
-            <Mail size={18} />
-            <span>Contact</span>
-          </button>
-
-          <button onClick={() => scrollToSection("faq")}>
-            <HelpCircle size={18} />
-            <span>FAQ</span>
-          </button>
+        <nav className="landing-navbar-links">
+          {NAV_LINKS.map((link) => (
+            <button key={link.id} onClick={() => scrollToSection(link.id)}>
+              {link.label}
+            </button>
+          ))}
         </nav>
-      </aside>
 
-      {/* Main column: topbar + content */}
-      <div className="landing-main">
-        <header className="landing-topbar">
-          <button className="landing-theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
-            {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
+        <button className="landing-navbar-cta" onClick={() => navigate("/login")}>
+          Get Started
+        </button>
+      </header>
+
+      {/* Hero */}
+      <section id="hero" className="landing-hero">
+        <video className="landing-hero-video" autoPlay loop muted playsInline>
+          <source src="/videos/product-hero.mp4" type="video/mp4" />
+        </video>
+
+        <div className="landing-hero-overlay" />
+
+        <div className="landing-hero-content">
+          <p className="landing-hero-animation-note">(animation here)</p>
+
+          <h1>
+            The Future of
+            <br />
+            Human Performance.
+          </h1>
+
+          <img
+            src={stingrayBarImage}
+            alt="STINGRAY Bar"
+            className="landing-hero-product-image"
+          />
+        </div>
+      </section>
+
+      {/* Wordmark intro */}
+      <section className="landing-wordmark-section">
+        <h2 className="landing-wordmark">STINGRAY</h2>
+        <p>
+          Stingray builds precision motion-tracking hardware that turns effort
+          into insight. Real-time feedback through touch, sight, and sound puts
+          adaptive power in every trainer's hands so it's easier to push, guide,
+          and improve.
+        </p>
+
+        <div className="landing-hero-buttons">
+          <button className="landing-outline-button" onClick={() => scrollToSection("ecosystem")}>
+            Explore the Ecosystem
           </button>
-
-          <button className="landing-login-button" onClick={() => navigate("/login")}>
-            <LogIn size={18} />
-            <span>Log In</span>
+          <button className="landing-outline-button" onClick={() => scrollToSection("demo")}>
+            Watch Demo
           </button>
-        </header>
+        </div>
+      </section>
 
-        {/* Hero with video background */}
-        <section className="landing-hero">
-          <video
-            className="landing-hero-video"
-            autoPlay
-            loop
-            muted
-            playsInline
-            poster={stingrayBarImage}
-          >
-            <source src="../assets/videos/demo-placeholder.mp4" type="video/mp4" />
-          </video>
+      {/* One Connected Ecosystem */}
+      <section id="ecosystem" className="landing-section landing-section-center">
+        <h2>One Connected Ecosystem</h2>
+        <p>
+          Every Stingray XR product works together to deliver real-time movement
+          intelligence, adaptive coaching, and seamless performance tracking.
+        </p>
 
-          <div className="landing-hero-overlay" />
+        <img
+          src={stingrayBarImage}
+          alt="STINGRAY Ecosystem"
+          className="landing-section-image"
+        />
+      </section>
 
-          <div className="landing-hero-content">
-            <h1>STINGRAY</h1>
-            <p>Advanced motion tracking for posture and movement assessment.</p>
-          </div>
-        </section>
+      {/* Performance is Not Limited by Effort */}
+      <section id="demo" className="landing-section landing-section-center">
+        <h2>
+          Performance is Not
+          <br />
+          Limited by Effort.
+        </h2>
+        <p>
+          The greatest obstacle to performance isn't effort — it's information.
+          Traditional equipment measures outcomes; Stingray XR understands
+          movement itself.
+        </p>
 
-        {/* About */}
-        <section id="about" className="landing-section">
-          <h2>About Us</h2>
-          <p>
-            Stingray XR builds precision motion-tracking hardware for physiotherapy
-            and movement assessment. Inspired by the natural tones of the stingray
-            and its underwater environment, our device pairs deep neutrals with
-            vibrant, real-time feedback to help clinicians and patients understand
-            movement with clarity and confidence.
-          </p>
-        </section>
+        <div className="landing-video-placeholder">
+          <span>Insert demo video</span>
+        </div>
+      </section>
 
-        {/* Contact */}
-        <section id="contact" className="landing-section">
-          <h2>Contact</h2>
-          <p>Have a question before you buy, or need support with your device?</p>
-          <a className="landing-contact-email" href="mailto:support@stingrayxr.com">
-            support@stingrayxr.com
-          </a>
-        </section>
+      {/* THE STINGRAY BAR */}
+      <ProductSection
+        id="bar"
+        eyebrow="THE"
+        title="STINGRAY BAR"
+        description="We've created a smart training tool that transforms how you train. Combine real-time posture guidance and biofeedback in one intuitive, ergonomic bar built for every session."
+        image={stingrayBarImage}
+        stats={[
+          { icon: <Zap size={22} />, value: "<20ms", label: "Latency", note: "Faster than human reaction time" },
+          { icon: <Vibrate size={22} />, value: "Haptic", label: "Guidance", note: "Cues that redirect effort in real time" },
+          { icon: <BatteryFull size={22} />, value: "Day Long", label: "Battery", note: "20-24 hours battery life" },
+        ]}
+        features={[
+          { icon: <Fingerprint size={18} />, label: "Precision Touch" },
+          { icon: <Volume2 size={18} />, label: "Spatial Audio" },
+          { icon: <Lightbulb size={18} />, label: "Luminous Cues" },
+        ]}
+      />
 
-        {/* FAQ */}
-        <section id="faq" className="landing-section">
-          <h2>FAQ</h2>
+      {/* THE STINGRAY MAT */}
+      <ProductSection
+        id="mat"
+        eyebrow="THE"
+        title="STINGRAY MAT"
+        description="Precision-tracked ground contact for every rep. The Stingray Mat syncs with the bar to close the loop between upper and lower body movement."
+        image={stingrayBarImage}
+        reverse
+        stats={[
+          { icon: <Scan size={22} />, value: "ToF", label: "Sensing", note: "Laser Time of Flight for depth and weight distribution" },
+          { icon: <RefreshCw size={22} />, value: "Synchronised", label: "Tracking", note: "Locked to the bar for a single, unified read of movement" },
+          { icon: <Layers size={22} />, value: "Grip", label: "Material", note: "Non-slip weave built for wet or dry conditions" },
+        ]}
+      />
 
-          <div className="landing-faq-item">
-            <h3>How does the STINGRAY bar work?</h3>
-            <p>
-              The bar tracks pitch, roll, and yaw in real time via onboard IMU
-              sensors, streaming live feedback to the companion dashboard during
-              guided movement assessments.
-            </p>
-          </div>
+      {/* WHY STINGRAY */}
+      <section id="why" className="landing-section landing-section-center">
+        <p className="landing-eyebrow">WHY</p>
+        <h2 className="landing-wordmark landing-wordmark-small">STINGRAY</h2>
+        <p>
+          At Stingray XR, we envision a future where athlete training is driven
+          by real, actionable data. Backed by our team, our engineers combine
+          cutting-edge motion tracking with intelligent feedback systems that
+          adapt in the moment — helping athletes push past plateaus and reach
+          their full potential.
+        </p>
 
-          <div className="landing-faq-item">
-            <h3>Is a subscription required?</h3>
-            <p>
-              No. The dashboard and core assessment tools are included with your
-              device purchase.
-            </p>
-          </div>
+        <div className="landing-why-grid">
+          <WhyCard
+            icon={<Trophy size={26} />}
+            title="For Athletes"
+            description="Real-time feedback that turns every rep into a coaching moment."
+          />
+          <WhyCard
+            icon={<Users size={26} />}
+            title="For Coaches"
+            description="Objective movement data across your whole roster, in one view."
+          />
+          <WhyCard
+            icon={<Building2 size={26} />}
+            title="For Facilities"
+            description="Equip every station with consistent, connected performance tracking."
+          />
+        </div>
+      </section>
 
-          <div className="landing-faq-item">
-            <h3>What's in the box?</h3>
-            <p>
-              One STINGRAY bar, a charging cable, and a quick-start guide to
-              connect your device and run your first assessment.
-            </p>
-          </div>
-        </section>
+      {/* Final CTA */}
+      <section className="landing-final-cta">
+        <h2>
+          Train Smarter. Move Better.
+          <br />
+          Perform Without Limits.
+        </h2>
 
-        {/* Purchase */}
-        <footer className="landing-footer">
-          <button className="landing-purchase-button">
-            <ShoppingCart size={20} />
-            <span>Purchase Now</span>
-          </button>
-        </footer>
+        <button className="landing-purchase-button">Pre-Order Now →</button>
+      </section>
+
+      {/* Footer */}
+      <footer className="landing-footer">
+        <img src={logoLight} alt="Stingray" className="landing-footer-logo" />
+      </footer>
+    </div>
+  );
+}
+
+function ProductSection({ id, eyebrow, title, description, image, stats, features, reverse }) {
+  return (
+    <section id={id} className={`landing-product-section ${reverse ? "reverse" : ""}`}>
+      <div className="landing-product-header">
+        <p className="landing-eyebrow">{eyebrow}</p>
+        <h2 className="landing-wordmark landing-wordmark-small">{title}</h2>
+        <p>{description}</p>
       </div>
+
+      <img src={image} alt={title} className="landing-product-image" />
+
+      <div className="landing-stats-row">
+        {stats.map((stat) => (
+          <div className="landing-stat" key={stat.label}>
+            <div className="landing-stat-icon">{stat.icon}</div>
+            <strong>{stat.value}</strong>
+            <span>{stat.label}</span>
+            <p>{stat.note}</p>
+          </div>
+        ))}
+      </div>
+
+      {features && (
+        <div className="landing-features-row">
+          {features.map((feature) => (
+            <div className="landing-feature-pill" key={feature.label}>
+              {feature.icon}
+              <span>{feature.label}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="landing-hero-buttons">
+        <button className="landing-outline-button">Select Colour</button>
+        <button className="landing-purchase-button small">Pre-Order Now →</button>
+      </div>
+    </section>
+  );
+}
+
+function WhyCard({ icon, title, description }) {
+  return (
+    <div className="landing-why-card">
+      <div className="landing-why-icon">{icon}</div>
+      <h3>{title}</h3>
+      <p>{description}</p>
     </div>
   );
 }

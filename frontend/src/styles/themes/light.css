@@ -61,6 +61,21 @@
   --shadow-large: 0 20px 48px rgba(0, 0, 0, 0.12);
 }
 
+ 
+[data-theme='light'] {
+  --bg: #f7f7f5;
+  --bg-elevated: #ffffff;
+  --text-primary: #14151a;
+  --text-secondary: #63666d;
+  --accent: #0fae96;
+  --accent-dim: rgba(15, 174, 150, 0.1);
+  --border: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme='light'] .landing-sidebar {
+  background: rgba(247, 247, 245, 0.75);
+}
+
 /* High Contrast */
 
 [data-theme="light"][data-high-contrast] {
