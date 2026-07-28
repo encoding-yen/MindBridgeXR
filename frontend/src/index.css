@@ -32,6 +32,14 @@
   --green: var(--color-success);
   --yellow: var(--color-warning);
   --red: var(--color-danger);
+
+  --bg-elevated: #111114;
+  --text-primary: #f3f4f2;
+  --text-secondary: #8b8f94;
+  --accent: #35e0c4;
+  --accent-dim: rgba(53, 224, 196, 0.14);
+  --border: rgba(255, 255, 255, 0.08);
+  --nav-height: 64px;
 }
 
 * {
