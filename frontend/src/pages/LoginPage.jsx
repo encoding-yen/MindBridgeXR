@@ -44,7 +44,9 @@ export default function LoginPage() {
     <section className="auth-page">
       <div className="auth-brand-panel">
         <div className="auth-logo">
-          <img src={logoLight} alt="Stingray" className="auth-logo-mark" />
+          <a href="/">
+            <img src={logoLight} alt="Stingray" className="auth-logo-mark" />
+          </a>
         </div>
 
         <img src={stingrayBarImage} alt="STINGRAY Bar" className="auth-bar-image" />

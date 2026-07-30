@@ -1,3 +1,4 @@
+import {useRef} from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Zap,
@@ -12,8 +13,10 @@ import {
   Users,
   Building2,
   Trophy,
+  Sun,
+  Moon
 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
 import logoDark from "../assets/images/Logo-Dark.svg";
 import logoLight from "../assets/images/Logo-Light.svg";
 import stingrayBarImage from "../assets/images/stingray-bar.png";
@@ -27,6 +30,15 @@ const NAV_LINKS = [
 
 export default function LandingPage() {
   const navigate = useNavigate();
+  const ecosystemImageRef = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: ecosystemImageRef,
+    offset: ["start end", "end start"],
+  });
+
+  const ecosystemImageRotate = useTransform(scrollYProgress, [0, 0.3], [0, 180]);
+  scrollYProgress.on("change", (v) => console.log("scroll progress:", v));
 
   function scrollToSection(id) {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -36,7 +48,9 @@ export default function LandingPage() {
     <div className="landing-page">
       {/* Sticky top nav */}
       <header className="landing-navbar">
-        <img src={logoLight} alt="Stingray" className="landing-navbar-logo" />
+        <a href="/">
+          <img src={logoLight} alt="Stingray" className="landing-navbar-logo" />
+        </a>
 
         <nav className="landing-navbar-links">
           {NAV_LINKS.map((link) => (
@@ -104,10 +118,12 @@ export default function LandingPage() {
           intelligence, adaptive coaching, and seamless performance tracking.
         </p>
 
-        <img
+        <motion.img
+          ref={ecosystemImageRef}
           src={stingrayBarImage}
           alt="STINGRAY Ecosystem"
           className="landing-section-image"
+          style={{ rotate: ecosystemImageRotate }}
         />
       </section>
 

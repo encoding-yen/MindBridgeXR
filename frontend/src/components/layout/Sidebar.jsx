@@ -41,11 +41,13 @@ export default function Sidebar() {
     <aside className="sidebar">
       {/* Logo */}
       <div className="sidebar-logo">
-        <img
-          src={theme === "dark" ? logoLight : logoDark}
-          alt="Stingray"
-          className="sidebar-logo-mark"
-        />
+        <a href="/dashboard">
+          <img
+            src={theme === "dark" ? logoLight : logoDark}
+            alt="Stingray"
+            className="sidebar-logo-mark"
+          />
+        </a>
       </div>
 
       {/* Navigation */}
