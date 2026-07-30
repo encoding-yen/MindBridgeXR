@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.database import SessionLocal
 from app.schemas.auth_schema import RegisterRequest, LoginRequest, UserResponse
-from app.services.auth_service import register_user, login_user
+from app.services.auth_service import register_user, login_user, mock_pay_user
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -33,5 +33,15 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
 
     if user is None:
         raise HTTPException(status_code=401, detail="Invalid email or password")
+
+    return user
+
+
+@router.post("/mock-pay/{user_id}", response_model=UserResponse)
+def mock_pay(user_id: int, db: Session = Depends(get_db)):
+    user = mock_pay_user(db, user_id)
+
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
 
     return user

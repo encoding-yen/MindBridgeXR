@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import Sidebar from "./components/layout/Sidebar.jsx";
 import TopBar from "./components/layout/TopBar.jsx";
@@ -6,6 +6,7 @@ import TopBar from "./components/layout/TopBar.jsx";
 import LandingPage from "./pages/LandingPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
+import PaywallPage from "./pages/PaymentWall.jsx";
 import DashboardHome from "./pages/DashboardHome.jsx";
 import StartInstructionsPage from "./pages/StartInstructionsPage.jsx";
 import LiveExercisePage from "./pages/LiveExercisePage.jsx";
@@ -48,7 +49,29 @@ export default function App() {
     );
   }
 
-  /* Main Application Layout */
+  /* Paywall */
+
+  const isPaywallPage = location.pathname === "/paywall";
+
+  if (isPaywallPage) {
+    return (
+      <Routes>
+        <Route path="/paywall" element={<PaywallPage />} />
+      </Routes>
+    );
+  }
+
+  /* Main Application Layout (gated behind payment) */
+
+  const currentUser = JSON.parse(localStorage.getItem("stingrayUser") || "null");
+
+  if (!currentUser) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!currentUser.has_paid) {
+    return <Navigate to="/paywall" replace />;
+  }
 
   return (
     <div className="app-shell">

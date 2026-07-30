@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Float
+from sqlalchemy import Boolean, Column, Integer, String, DateTime, Float
 from sqlalchemy.sql import func
 from app.database import Base
 
@@ -11,6 +11,8 @@ class User(Base):
     full_name = Column(String(150), nullable=False)
     email = Column(String(150), unique=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
+
+    has_paid = Column(Boolean, default=False, nullable=False)
 
     date_of_birth = Column(String(50), nullable=True)
     height_cm = Column(Float, nullable=True)
