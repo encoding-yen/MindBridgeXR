@@ -27,6 +27,7 @@ class UserResponse(BaseModel):
     height_cm: Optional[float] = None
     weight_kg: Optional[float] = None
     last_login: Optional[datetime] = None
+    
 
     class Config:
         from_attributes = True

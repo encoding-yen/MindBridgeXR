@@ -1,4 +1,3 @@
-from datetime import datetime, timezone
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from app.models.user import User
@@ -52,13 +51,20 @@ def login_user(db: Session, data):
     if not verify_password(data.password, user.password_hash):
         return None
 
-    # Grab the previous login time before overwriting it, so "Last Login"
-    # on the dashboard reflects the last time they logged in, not this one.
-    previous_login = user.last_login
+    return user
 
-    user.last_login = datetime.now(timezone.utc)
+
+# NOTE: mock payment — just flips has_paid to True. No real payment
+# processor (Stripe, etc.) is wired up. Swap this for a real charge +
+# webhook confirmation before this ever goes near real money.
+def mock_pay_user(db: Session, user_id: int):
+    user = db.query(User).filter(User.id == user_id).first()
+
+    if not user:
+        return None
+
+    user.has_paid = True
     db.commit()
     db.refresh(user)
 
-    user.last_login = previous_login
     return user
