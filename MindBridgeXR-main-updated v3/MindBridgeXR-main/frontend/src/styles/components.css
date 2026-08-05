@@ -1,0 +1,487 @@
+/* Sidebar */
+
+.sidebar {
+  width: var(--sidebar-width);
+  min-height: 100vh;
+  background: var(--color-sidebar);
+  border-right: 1px solid var(--color-border);
+  padding: 24px 18px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-small);
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 34px;
+  padding: 0 8px;
+  color: var(--color-text-primary);
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.sidebar-logo-mark {
+  color: var(--color-primary);
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-link {
+  width: 100%;
+  min-height: 48px;
+  border: none;
+  background: transparent;
+  color: var(--sidebar-link);
+  padding: 12px 14px;
+  border-radius: var(--radius-medium);
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  text-align: left;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sidebar-link:hover {
+  background: var(--sidebar-link-hover);
+  color: var(--color-text-primary);
+}
+
+.sidebar-link.active {
+  background: var(--sidebar-link-active);
+  color: var(--color-primary);
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.patient-id-card {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-secondary);
+  border-radius: var(--radius-large);
+  padding: 16px;
+}
+
+.patient-id-card p {
+  margin: 0 0 8px;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.patient-id-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.patient-id-row span {
+  color: var(--color-primary);
+  font-size: 1rem;
+  font-weight: 750;
+}
+
+.patient-id-row svg {
+  color: var(--color-text-secondary);
+}
+
+.logout-button {
+  min-height: 48px;
+  border: 1px solid color-mix(in srgb, var(--color-danger) 30%, transparent);
+  background: color-mix(in srgb, var(--color-danger) 8%, transparent);
+  color: var(--color-danger);
+  border-radius: var(--radius-medium);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: color-mix(in srgb, var(--color-danger) 14%, transparent);
+}
+
+
+/* Top Bar */
+
+.top-bar {
+  height: var(--topbar-height);
+  padding: 0 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--color-topbar);
+  border-bottom: 5px solid var(--color-divider);
+  border-radius: 0 0 var(--radius-medium) var(--radius-medium);
+  backdrop-filter: blur(18px);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.top-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.notification-button,
+.settings-button,
+.profile-button {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.notification-button:hover,
+.settings-button:hover,
+.profile-button:hover {
+  background: var(--color-surface-hover);
+  transform: translateY(-1px);
+}
+
+.notification-button span {
+  position: absolute;
+  top: -5px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  background: var(--color-danger);
+  color: #ffffff;
+  border-radius: var(--radius-pill);
+  display: grid;
+  place-items: center;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+
+/* Shared Cards */
+
+.summary-card,
+.dashboard-panel,
+.device-card,
+.instruction-card,
+.session-summary-card,
+.system-check-card,
+.movement-panel,
+.quality-panel,
+.demo-card,
+.bar-visualization-panel,
+.report-card,
+.overall-assessment-card,
+.exercise-breakdown-card,
+.movement-quality-card,
+.recommendations-panel,
+.timeline-panel,
+.history-filter-card,
+.history-table-card,
+.progress-card,
+.progress-chart-card,
+.profile-card,
+.help-card {
+  background: var(--card-background);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-small);
+}
+
+
+/* Shared Buttons */
+
+.primary-action,
+.primary-assessment-card,
+.auth-primary-button {
+  background: var(--button-primary);
+  color: #ffffff;
+}
+
+.primary-action:hover,
+.primary-assessment-card:hover,
+.auth-primary-button:hover {
+  color: var(--button-primary-hover-text, #ffffff);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-large);
+}
+
+.primary-action:disabled,
+.primary-assessment-card:disabled,
+.auth-primary-button:disabled {
+  background: var(--color-text-muted);
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.secondary-button,
+.outline-action,
+.outline-small-button {
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
+}
+
+
+/* Live Bar Viewer */
+
+.bar-visualization-panel {
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.08), transparent 52%),
+    var(--color-viewer-background);
+}
+
+
+/* Connection Status (STINGRAY Bar) */
+
+.connection-pill {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 8px 14px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.connection-pill span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.connection-pill.checking {
+  color: var(--color-text-secondary);
+  background: color-mix(in srgb, var(--color-text-muted) 10%, transparent);
+  border-color: color-mix(in srgb, var(--color-text-muted) 25%, transparent);
+}
+
+.connection-pill.checking span {
+  background: var(--color-text-muted);
+  animation: pill-pulse 1.4s ease-in-out infinite;
+}
+
+.connection-pill.connected {
+  color: var(--color-success, #1fae58);
+  background: color-mix(in srgb, var(--color-success, #1fae58) 10%, transparent);
+  border-color: color-mix(in srgb, var(--color-success, #1fae58) 30%, transparent);
+}
+
+.connection-pill.connected span {
+  background: var(--color-success, #1fae58);
+}
+
+.connection-pill.disconnected {
+  color: var(--color-danger);
+  background: color-mix(in srgb, var(--color-danger) 8%, transparent);
+  border-color: color-mix(in srgb, var(--color-danger) 30%, transparent);
+}
+
+.connection-pill.disconnected span {
+  background: var(--color-danger);
+}
+
+/* System Check rows */
+
+.check-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.check-row:last-of-type {
+  border-bottom: none;
+}
+
+.check-row span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.check-row strong {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.check-row.checking span svg,
+.check-row.checking strong {
+  color: var(--color-text-muted);
+}
+
+.check-row.ready span svg,
+.check-row.ready strong {
+  color: var(--color-success, #1fae58);
+}
+
+.check-row.failed span svg,
+.check-row.failed strong {
+  color: var(--color-danger);
+}
+
+/* Ready / not-ready summary message */
+
+.ready-message {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius-medium);
+  font-size: 0.88rem;
+  font-weight: 650;
+}
+
+.ready-message.ok {
+  color: var(--color-success, #1fae58);
+  background: color-mix(in srgb, var(--color-success, #1fae58) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-success, #1fae58) 25%, transparent);
+}
+
+.ready-message.not-ok {
+  color: var(--color-danger);
+  background: color-mix(in srgb, var(--color-danger) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-danger) 25%, transparent);
+}
+
+/* Spinner (Loader2 icon while checking connection) */
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pill-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+
+/* Elderly Mode */
+
+[data-elderly-mode] .sidebar-link {
+  min-height: 48px;
+  font-size: 1rem;
+}
+
+[data-elderly-mode] .sidebar-logo {
+  font-size: 1.4rem;
+}
+
+[data-elderly-mode] .notification-button,
+[data-elderly-mode] .settings-button,
+[data-elderly-mode] .profile-button {
+  width: 44px;
+  height: 44px;
+}
+
+[data-elderly-mode] .primary-action,
+[data-elderly-mode] .primary-assessment-card,
+[data-elderly-mode] .auth-primary-button {
+  min-height: 58px;
+  font-size: 1.05rem;
+}
+
+[data-elderly-mode] input,
+[data-elderly-mode] select,
+[data-elderly-mode] textarea {
+  min-height: 52px;
+  font-size: 1.05rem;
+}
+
+[data-elderly-mode] .summary-card,
+[data-elderly-mode] .dashboard-panel,
+[data-elderly-mode] .device-card,
+[data-elderly-mode] .instruction-card,
+[data-elderly-mode] .session-summary-card,
+[data-elderly-mode] .system-check-card,
+[data-elderly-mode] .movement-panel,
+[data-elderly-mode] .quality-panel,
+[data-elderly-mode] .demo-card,
+[data-elderly-mode] .bar-visualization-panel {
+  border-width: 2px;
+}
+
+/* Slightly increase spacing without enlarging cards */
+
+[data-elderly-mode] h1 {
+  font-size: 2.2rem;
+}
+
+[data-elderly-mode] h2 {
+  font-size: 1.7rem;
+}
+
+[data-elderly-mode] h3 {
+  font-size: 1.3rem;
+}
+
+[data-elderly-mode] p,
+[data-elderly-mode] span,
+[data-elderly-mode] label,
+[data-elderly-mode] td,
+[data-elderly-mode] th {
+  line-height: 1.7;
+}
+
+[data-elderly-mode] .connection-pill {
+  font-size: 0.95rem;
+  padding: 10px 16px;
+}
+
+[data-elderly-mode] .check-row span,
+[data-elderly-mode] .check-row strong {
+  font-size: 1rem;
+}
+
+[data-elderly-mode] .ready-message {
+  font-size: 1rem;
+  padding: 14px 16px;
+}

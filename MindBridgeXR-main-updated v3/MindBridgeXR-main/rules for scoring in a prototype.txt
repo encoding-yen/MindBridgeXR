@@ -1,0 +1,139 @@
+rules for scoring in this prototype:
+
+For each exercise:
+collect pitch/roll/yaw values while user performs it
+calculate:
+- pitch_range = max(pitch) - min(pitch)
+- roll_range = max(roll) - min(roll)
+- yaw_range = max(yaw) - min(yaw)
+- stability = average change between readings
+
+Then score each exercise out of 3:
+
+3 = good range + stable movement
+2 = acceptable range
+1 = small movement or unstable
+0 = no meaningful movement
+
+Fast prototype logic:
+
+movement_range = largest of pitch_range, roll_range, yaw_range
+
+if movement_range >= 45 and stability <= 8:
+    score = 3
+elif movement_range >= 30:
+    score = 2
+elif movement_range >= 15:
+    score = 1
+else:
+    score = 0
+
+Then session score:
+
+total_score = exercise1 + exercise2 + ... + exercise7
+max_score = 21
+
+Risk:
+
+17–21 = Low
+10–16 = Moderate
+0–9 = High
+
+
+osture
+
+Based on how much the bar tilts unexpectedly.
+
+Posture = 100 - average roll error
+
+Example:
+
+0-5° deviation  → 95-100%
+5-10° deviation → 80-95%
+10-20° deviation → 60-80%
+
+Display:
+
+Excellent
+Good
+Fair
+Poor
+Control
+
+Based on movement smoothness.
+
+You already receive data every few milliseconds.
+
+Calculate:
+
+difference between consecutive readings
+
+Large jumps:
+
+Poor control
+
+Smooth movement:
+
+Good control
+
+Example:
+
+Control = 88%
+Movement Range
+
+This one is easiest.
+
+Range = max angle - min angle
+
+Example:
+
+Pitch moved from:
+0° → 42°
+
+Range = 42°
+
+Convert to percentage:
+
+45°+ = 100%
+30° = 70%
+15° = 40%
+Movement Speed
+
+You already have timestamps.
+
+Calculate:
+
+angle change / time
+
+Example:
+
+30° in 2 seconds
+
+15°/sec
+
+Display:
+
+Slow
+Normal
+Fast
+
+instead of fake:
+
+0.48 m/s
+
+because the bar is not actually measuring meters.
+
+For the next 3 hours, I would do this:
+
+Priority 1:
+✓ Real score
+✓ Real risk
+✓ Real session history
+
+Priority 2:
+✓ Real Posture %
+✓ Real Control %
+✓ Real Range %
+
+Priority 3:
+Movement Speed

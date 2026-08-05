@@ -1,0 +1,75 @@
+/* Dark Theme — Stingray XR Brand Palette */
+
+[data-theme="dark"] {
+  /* Backgrounds (Carbon Black / Graphite Grey) */
+  --color-background: #000000;
+  --color-surface: #333333;
+  --color-surface-secondary: #3f3f3f;
+  --color-surface-hover: #4a4a4a;
+
+  /* Sidebar & Topbar */
+  --color-sidebar: #000000;
+  --color-topbar: rgba(0, 0, 0, 0.85);
+
+  /* Live 3D Viewer (Deep Ocean Blue — underwater brand aesthetic) */
+  --color-viewer-background: #1b4f72;
+
+  /* Borders */
+  --color-border: #454548;
+  --color-divider: #3a3a3a;
+
+  /* Text */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #b8bdc2;
+  --color-text-muted: #6a6d70;
+
+  /* Accent (Deep Ocean Blue base, Electric Cyan hover/highlight) */
+  --color-primary: #1b4f72;
+  --color-primary-hover: #67f3f7;
+
+  /* Status (System Feedback Colours) */
+  --color-success: #4cd964;
+  --color-warning: #ffd60a;
+  --color-danger: #e34b4b;
+  --color-info: #0d6f7e;
+
+  /* Cards */
+  --card-background: var(--color-surface);
+  --card-border: var(--color-border);
+
+  /* Inputs */
+  --input-background: #3f3f3f;
+  --input-border: #4a4a4a;
+  --input-focus: var(--color-primary);
+
+  /* Buttons */
+  --button-primary: var(--color-primary);
+  --button-primary-hover: var(--color-primary-hover);
+  --button-primary-hover-text: #1a1a1a;
+
+  --button-secondary: #3a3a3a;
+  --button-secondary-hover: #454545;
+
+  /* Sidebar */
+  --sidebar-link: #b8bdc2;
+  --sidebar-link-hover: rgba(103, 243, 247, 0.12);
+  --sidebar-link-active: rgba(27, 79, 114, 0.45);
+
+  /* Shadows */
+  --shadow-small: 0 2px 8px rgba(0, 0, 0, 0.18);
+  --shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.24);
+  --shadow-large: 0 20px 48px rgba(0, 0, 0, 0.35);
+}
+
+/* High Contrast */
+
+[data-theme="dark"][data-high-contrast] {
+  --color-background: #000000;
+  --color-surface: #111111;
+  --color-border: #ffffff;
+
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #f2f2f2;
+
+  --sidebar-link-active: #67f3f7;
+}

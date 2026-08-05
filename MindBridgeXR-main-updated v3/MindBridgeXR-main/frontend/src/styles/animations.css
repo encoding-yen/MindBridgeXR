@@ -1,0 +1,40 @@
+/* Smooth Transitions */
+
+a,
+button,
+input,
+textarea,
+select {
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+
+/* Page Animation */
+
+.main-content {
+  animation: pageFadeIn 0.25s ease;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* Reduced Motion */
+
+[data-reduce-motion] .main-content {
+  animation: none;
+}
